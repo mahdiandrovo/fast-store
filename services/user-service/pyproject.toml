@@ -9,9 +9,13 @@ authors = [
 requires-python = ">=3.13"
 dependencies = [
     "alembic>=1.20.1",
+    "asyncpg>=0.32.0",
     "fastapi[standard]>=0.163.1",
     "psycopg[binary]>=3.3.9",
-    "sqlalchemy>=2.1.8",
+    "pwdlib[argon2]>=0.4.2",
+    "pydantic-settings>=2.16.3",
+    "pydantic[email]>=2.14.3",
+    "sqlalchemy[asyncio]>=2.1.8",
 ]
 
 [build-system]
