@@ -1,4 +1,3 @@
-
 # Python
 __pycache__/
 *.py[cod]
@@ -21,11 +20,30 @@ htmlcov/
 # Code quality
 .ruff_cache/
 .mypy_cache/
+.pyright/
+.pyre/
 
 # IDE
 .idea/
+.vscode/
 
 # Build artifacts
 dist/
 build/
 *.egg-info/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local databases
+*.sqlite
+*.sqlite3

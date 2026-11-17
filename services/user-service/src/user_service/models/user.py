@@ -1,0 +1,68 @@
+
+from datetime import datetime
+
+from sqlalchemy import Boolean, DateTime, String, func
+from sqlalchemy.orm import Mapped, mapped_column
+
+from user_service.db.base import Base
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    # Primary key
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        index=True,
+    )
+
+    # User information
+    name: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    email: Mapped[str] = mapped_column(
+        String(320),
+        unique=True,
+        index=True,
+        nullable=False,
+    )
+
+    phone_number: Mapped[str | None] = mapped_column(
+        String(20),
+        nullable=True,
+    )
+
+    country: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    # Store hashed password
+    password_hash: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+
+    # Account status
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        default=True,
+        server_default="true",
+        nullable=False,
+    )
+
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
