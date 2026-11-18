@@ -1,0 +1,26 @@
+# Git
+.git
+.gitignore
+
+# Python virtual environments
+.venv
+**/.venv
+
+# Python cache files
+__pycache__
+**/__pycache__
+*.py[cod]
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+
+# Testing and linting caches
+.pytest_cache
+.ruff_cache
+.mypy_cache
+
+# IDE files
+.vscode
+.idea
