@@ -73,6 +73,11 @@ services:
     environment:
       USER_SERVICE_URL: http://user-service:8001
       PRODUCT_SERVICE_URL: http://product-service:8002
+      JWT_PUBLIC_KEY_PATH: /run/secrets/public_key.pem
+
+    volumes:
+      - ./secrets/public_key.pem:/run/secrets/public_key.pem:ro
+      
     depends_on:
       user-service:
         condition: service_started
