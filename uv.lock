@@ -76,6 +76,7 @@ source = { editable = "gateway/api-gateway" }
 dependencies = [
     { name = "fastapi" },
     { name = "httpx" },
+    { name = "pyjwt", extra = ["crypto"] },
     { name = "uvicorn", extra = ["standard"] },
 ]
 
@@ -83,6 +84,7 @@ dependencies = [
 requires-dist = [
     { name = "fastapi" },
     { name = "httpx" },
+    { name = "pyjwt", extras = ["crypto"], specifier = ">=2.15.1" },
     { name = "uvicorn", extras = ["standard"] },
 ]
 
