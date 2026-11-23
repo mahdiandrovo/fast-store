@@ -34,6 +34,12 @@ services:
 
     environment:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/user_db
+      JWT_PRIVATE_KEY_PATH: /run/secrets/private_key.pem
+      JWT_PUBLIC_KEY_PATH: /run/secrets/public_key.pem
+
+    volumes:
+      - ./secrets/private_key.pem:/run/secrets/private_key.pem:ro
+      - ./secrets/public_key.pem:/run/secrets/public_key.pem:ro
 
     depends_on:
       postgres:
