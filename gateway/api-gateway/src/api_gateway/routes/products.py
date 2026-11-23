@@ -19,7 +19,7 @@ async def proxy_prodcuts(
         request=request,
         client=client,
         target_url=PRODUCT_SERVICE_URL,
-        path=f"/api/v1/products/{path}" if path else "/api/v1/products",
+        path=f"/api/v1/products/{path}" if path else "/api/v1/products/",
     )
 
 

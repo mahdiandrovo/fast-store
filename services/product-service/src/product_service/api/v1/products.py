@@ -16,7 +16,7 @@ router = APIRouter(prefix="/products", tags=["Products"])
 DatabaseSession = Annotated[AsyncSession, Depends(get_db)]
 
 @router.post(
-    "/",
+    "",
     response_model=ProductResponse,
     status_code=status.HTTP_201_CREATED,
 )
@@ -28,7 +28,7 @@ async def create_product(
     return await service.create_product(product_data)
 
 @router.get(
-    "/",
+    "",
     response_model=list[ProductResponse],
 )
 async def get_products(
