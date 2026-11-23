@@ -1,0 +1,18 @@
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "api-gateway"
+version = "0.1.0"
+description = "API Gateway for Fast Store microservices"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "httpx",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/api_gateway"]
