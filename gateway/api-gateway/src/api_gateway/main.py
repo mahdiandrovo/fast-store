@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 import httpx
 from api_gateway.routes.users import router as users_router
 from api_gateway.routes.products import router as products_router
+from api_gateway.routes.auth import router as auth_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,6 +32,12 @@ app.include_router(
     products_router,
     prefix="/api/v1/products",
     tags=["Product Service"],
+)
+
+app.include_router(
+    auth_router,
+    prefix="/api/v1/auth",
+    tags=["Authentication"],
 )
 
 @app.get("/")
