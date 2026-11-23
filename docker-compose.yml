@@ -32,9 +32,6 @@ services:
     container_name: fast-store-user-service
     restart: unless-stopped
 
-    ports:
-      - "8001:8001"
-
     environment:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/user_db
 
@@ -51,15 +48,31 @@ services:
     container_name: fast-store-product-service
     restart: unless-stopped
 
-    ports:
-      - "8002:8002"
-
     environment:
       PRODUCT_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/product_db
 
     depends_on:
       postgres:
         condition: service_healthy
+    
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: gateway/api-gateway/Dockerfile
+    container_name: fast-store-api-gateway
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      USER_SERVICE_URL: http://user-service:8001
+      PRODUCT_SERVICE_URL: http://product-service:8002
+    depends_on:
+      user-service:
+        condition: service_started
+      product-service:
+        condition: service_started
+
 
 volumes:
   postgres_data:
