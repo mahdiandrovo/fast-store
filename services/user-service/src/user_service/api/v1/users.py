@@ -14,6 +14,9 @@ from user_service.services.user_service import (
     UserService,
 )
 
+from user_service.api.dependencies import get_current_user
+from user_service.models.user import User
+
 
 router = APIRouter(
     prefix="/users",
@@ -53,6 +56,7 @@ async def get_users(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=100, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     service = UserService(db)
 
@@ -71,8 +75,15 @@ async def get_users(
 async def get_user(
     user_id: int,
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     service = UserService(db)
+
+    if user_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You are not allowed to access this user's information.",
+        )
 
     try:
         return await service.get_user(user_id)
@@ -94,8 +105,15 @@ async def update_user(
     user_id: int,
     user_data: UserUpdate,
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     service = UserService(db)
+
+    if user_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You are not allowed to update this user's information.",
+        )
 
     try:
         return await service.update_user(

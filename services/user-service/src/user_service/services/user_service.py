@@ -6,6 +6,9 @@ from user_service.models.user import User
 from user_service.repositories.user_repository import UserRepository
 from user_service.schemas.user import UserCreate, UserUpdate
 
+from user_service.core.security import verify_password
+from user_service.schemas.user import UserLogin
+
 
 class UserNotFoundError(Exception):
     """Raised when a requested user does not exist."""
@@ -115,3 +118,24 @@ class UserService:
         except Exception:
             await self.db.rollback()
             raise
+
+    async def authenticate_user(
+    self,
+    credentials: UserLogin,
+    ) -> User | None:
+
+        user = await self.repository.get_by_email(credentials.email)
+
+        if not user:
+            return None
+
+        if not verify_password(
+            credentials.password,
+            user.password_hash,
+        ):
+            return None
+
+        if not user.is_active:
+            return None
+
+        return user

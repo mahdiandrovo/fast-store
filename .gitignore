@@ -47,3 +47,6 @@ Thumbs.db
 # Local databases
 *.sqlite
 *.sqlite3
+
+# JWT RSA keys
+secrets/

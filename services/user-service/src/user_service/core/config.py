@@ -9,4 +9,11 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
+    # JWT configuration
+    JWT_PRIVATE_KEY_PATH: str = "secrets/private_key.pem"
+    JWT_PUBLIC_KEY_PATH: str = "secrets/public_key.pem"
+    JWT_ISSUER: str = "fast-store-user-service"
+    JWT_AUDIENCE: str = "fast-store-api"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
+
 settings = Settings()

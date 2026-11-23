@@ -7,6 +7,10 @@ class UserCreate(BaseModel):
     country: str = Field(min_length=2, max_length=100)
     password: str = Field(min_length=8, max_length=128)
 
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=8, max_length=128)
+
 class UserUpdate(BaseModel):
     name: str | None = Field(
         default=None,
@@ -26,3 +30,8 @@ class UserResponse(BaseModel):
     phone_number: str | None
     country: str
     is_active: bool
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    expires_in: int
