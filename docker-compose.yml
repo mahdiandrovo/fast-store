@@ -22,6 +22,23 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+  
+  # RabbitMQ Message Broker
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: fast-store-rabbitmq
+    restart: unless-stopped
+
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 
   # User Service
   user-service:
@@ -87,3 +104,4 @@ services:
 
 volumes:
   postgres_data:
+  rabbitmq_data:
