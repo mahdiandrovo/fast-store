@@ -6,6 +6,12 @@ from inventory_service.repositories.inventory_repository import (
     InventoryRepository,
 )
 from inventory_service.schemas.inventory import InventoryCreate
+from inventory_service.core.exceptions import (
+    InsufficientAvailableStockError,
+    InsufficientReservedStockError,
+    InventoryAlreadyExistsError,
+    InventoryNotFoundError,
+)
 
 
 class InventoryService:
@@ -24,8 +30,8 @@ class InventoryService:
         )
 
         if existing_inventory:
-            raise ValueError(
-                "Inventory already exists for this product."
+            raise InventoryAlreadyExistsError(
+                "Inventory already exists for this product"
             )
 
         try:
@@ -78,10 +84,10 @@ class InventoryService:
             )
 
             if inventory is None:
-                raise ValueError("Inventory not found for this product.")
+                raise InventoryNotFoundError("Inventory not found")
 
             if inventory.available_quantity < quantity:
-                raise ValueError("Insufficient available stock.")
+                raise InsufficientAvailableStockError("Insufficient available stock")
 
             inventory.available_quantity -= quantity
             inventory.reserved_quantity += quantity
@@ -109,10 +115,10 @@ class InventoryService:
             )
 
             if inventory is None:
-                raise ValueError("Inventory not found for this product.")
+                raise InventoryNotFoundError("Inventory not found")
 
             if inventory.reserved_quantity < quantity:
-                raise ValueError("Insufficient reserved stock.")
+                raise InsufficientReservedStockError("Insufficient reserved stock")
 
             inventory.reserved_quantity -= quantity
             inventory.available_quantity += quantity
@@ -126,6 +132,7 @@ class InventoryService:
             await self.db.rollback()
             raise
 
+    
     async def fulfill_stock(
         self,
         product_id: int,
@@ -140,10 +147,14 @@ class InventoryService:
             )
 
             if inventory is None:
-                raise ValueError("Inventory not found for this product.")
+                raise InventoryNotFoundError(
+                    "Inventory not found for this product."
+                )
 
             if inventory.reserved_quantity < quantity:
-                raise ValueError("Insufficient reserved stock.")
+                raise InsufficientReservedStockError(
+                    "Insufficient reserved stock."
+                )
 
             inventory.reserved_quantity -= quantity
 
@@ -155,4 +166,5 @@ class InventoryService:
         except Exception:
             await self.db.rollback()
             raise
+
 
