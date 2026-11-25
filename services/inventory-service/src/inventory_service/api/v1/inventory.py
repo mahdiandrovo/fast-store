@@ -2,6 +2,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from inventory_service.core.exceptions import (
+    InsufficientAvailableStockError,
+    InsufficientReservedStockError,
+    InventoryAlreadyExistsError,
+    InventoryNotFoundError,
+)
 from inventory_service.db.session import get_db
 from inventory_service.schemas.inventory import (
     InventoryCreate,
@@ -27,7 +33,7 @@ async def create_inventory(
 
     try:
         return await service.create_inventory(inventory_data)
-    except ValueError as exc:
+    except InventoryAlreadyExistsError as exc:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=str(exc),
@@ -105,9 +111,14 @@ async def reserve_stock(
             product_id=request.product_id,
             quantity=request.quantity,
         )
-    except ValueError as exc:
+    except InventoryNotFoundError as exc:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(exc),
+        ) from exc
+    except InsufficientAvailableStockError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
             detail=str(exc),
         ) from exc
 
@@ -124,9 +135,14 @@ async def release_stock(
             product_id=request.product_id,
             quantity=request.quantity,
         )
-    except ValueError as exc:
+    except InventoryNotFoundError as exc:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(exc),
+        ) from exc
+    except InsufficientReservedStockError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
             detail=str(exc),
         ) from exc
 
@@ -143,8 +159,13 @@ async def fulfill_stock(
             product_id=request.product_id,
             quantity=request.quantity,
         )
-    except ValueError as exc:
+    except InventoryNotFoundError as exc:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(exc),
+        ) from exc
+    except InsufficientReservedStockError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
             detail=str(exc),
         ) from exc
